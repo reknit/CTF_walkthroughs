@@ -1,7 +1,8 @@
 ****WARNING: THIS CONTAINS SOLUTIONS AND WILL SPOIL THE CHALLENGES!!****
 
-Below are writeups to the challenges contained in the OWASP Security Shepherd virtual machine.  It will help to set up
-BurpSuite as a proxy on your attacker machine to intercept requests where appropriate for certain levels.
+Below are writeups and solution to the challenges contained in the OWASP Security Shepherd virtual machine.  
+It will help to set up BurpSuite as a proxy on your attacker machine to intercept requests where appropriate 
+for certain levels.
 
 Enjoy!
 
@@ -20,3 +21,106 @@ Solution:
 5. Back in Security Shepherd, notice that the admin profile is displayed, and retrieve the answer key
 
 
+//////////////////////////////////////////////////
+//  LEVEL 2: POOR DATA VALIDATION               //
+//////////////////////////////////////////////////
+
+Solution:
+1. Enter a positive integer (i.e. 1) in the Security Shepherd field "Enter a number: " and click Submit Number
+2. The message returned shows that this is a valid number
+3. If you try to enter a -1 in that field, notice an error is returned stating: 
+"An Error Occurred:Invalid Number: Number must be greater than 0"
+4. In BurpSuite, turn intercept on and try submitting the form again with a valid integer (i.e. 1)
+5. Notice the intercepted request shows a paramter 'userdata=1'
+6. Modify this parameter to read 'userdata=-1' and Forward the request to the server
+7. The validation is bypassed, as the check only appears to occur on client side.  Retrieve the answer key
+
+
+//////////////////////////////////////////////////
+//  LEVEL 3: SECURITY MISCONFIGURATION          //
+//////////////////////////////////////////////////
+
+Solution:
+1. For this level, try entering common default credentials in the 'User Name' and 'Password' fields
+2. The correct credentials are: admin/password
+3. Retrieve the answer key
+
+
+//////////////////////////////////////////////////
+//  LEVEL 4: BROKEN SESSION MANAGEMENT          //
+//////////////////////////////////////////////////
+
+Solution:
+1. Use BurpSuite as a proxy intercept
+2. Click the 'Complete This Lesson' button on the Security Shepherd page
+3. Notice the intercepted request contains a cookie: 'lessonComplete=lessonNotComplete'
+4. Modify this cookie to remove the 'Not' word, resulting cookie: 'lessonComplete=lessonComplete'
+5. Forward the modified request to the server
+6. Retrieve the answer key
+
+
+//////////////////////////////////////////////////
+//  LEVEL 5: FAILURE TO RESTRICT URL ACCESS     //
+//////////////////////////////////////////////////
+
+Solution:
+1. In BurpSuite, use the Spider feature on the Security Shepherd site
+2. Now check the Target>Site Map tab and notice there is an entry for page: /lessons/adminOnly/resultKey.jsp
+3. This reveals a suspicious 'adminOnly' page that might be interesting
+4. Navigate to that url (/lessons/adminOnly/resultKey.jsp)
+5. Retrieve the answer key
+
+
+//////////////////////////////////////////////////
+//  LEVEL 6: CROSS SITE SCRIPTING               //
+//////////////////////////////////////////////////
+
+Solution:
+1. On the Security Shepherd page in the Search box type a common script that checks for running javascript
+2. Enter '<script>alert('1)</script>'
+3. Notice that a window pops up with 1, confirming that javascript runs on the page
+4. Retrieve the answer key
+
+
+//////////////////////////////////////////////////
+//  LEVEL 7: CROSS SITE SCRIPTING 1             //
+//////////////////////////////////////////////////
+
+Solution:
+1. Using common script from the previous lesson, enter '<IMG SRC="#" ONERROR="alert('XSS')"/>'
+2. This will return the popup window with 'alert(XSS)'
+3. Retrieve the answer key
+
+
+//////////////////////////////////////////////////
+//  LEVEL 8: INSECURE DATA STORAGE              //
+//////////////////////////////////////////////////
+*Note: You will need the Security Shepherd Android VM
+
+Solution:
+1. Boot the Android VM, then press Alt+F1 to get a terminal
+2. Navigate to the /data/data/com.mobshep.insecuredata/databases directory
+3. Notice there is a Members file
+4. Run the strings command on the file to see a cleartext string: !AdminBattery777
+5. Retrieve the answer key which is the password found in that string
+
+
+//////////////////////////////////////////////////
+//  LEVEL 9: INSECURE CRYPTOGRAPHIC STORAGE     //
+//////////////////////////////////////////////////
+
+Solution:
+1. A base64 encoded string is given in the challenge:
+YmFzZTY0aXNOb3RFbmNyeXB0aW9uQmFzZTY0aXNFbmNvZGluZ0Jhc2U2NEhpZGVzTm90aGluZ0Zyb21Zb3U=
+2. Create a file containg this string, then run the base64 command on the file with the -d option to decode
+3. The answer key is the decoded string
+
+
+//////////////////////////////////////////////////
+//  LEVEL 10: SQL INJECTION                     //
+//////////////////////////////////////////////////
+
+Solution:
+1. On the Security Shepherd page, try entering an escape character to break the sql query the server is expecting (i.e. ')
+2. Enter ' or '1=1
+3. Retrieve the answer key from the query results
