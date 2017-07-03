@@ -1,0 +1,22 @@
+****WARNING: THIS CONTAINS SOLUTIONS AND WILL SPOIL THE CHALLENGES!!****
+
+Below are writeups to the challenges contained in the OWASP Security Shepherd virtual machine.  It will help to set up
+BurpSuite as a proxy on your attacker machine to intercept requests where appropriate for certain levels.
+
+Enjoy!
+
+
+
+
+//////////////////////////////////////////////////
+//  LEVEL 1: INSECURE DIRECT OBJECT REFERENCES  //
+//////////////////////////////////////////////////
+
+Solution:
+1. Use BurpSuite as a proxy to intercept web requests for this level
+2. Click 'Refresh your Profile' on the Security Shepherd page
+3. Go to BurpSuite and make sure that the request was intercepted. Notice the 'user=guest' parameter in the request.
+4. Change 'user=guest' to read 'user=admin' and click Forward in BurpSuite to send the modified request to the server.
+5. Back in Security Shepherd, notice that the admin profile is displayed, and retrieve the answer key
+
+
