@@ -124,3 +124,67 @@ Solution:
 1. On the Security Shepherd page, try entering an escape character to break the sql query the server is expecting (i.e. ')
 2. Enter ' or '1=1
 3. Retrieve the answer key from the query results
+
+
+//////////////////////////////////////////////////
+//  LEVEL 11: INSECURE CRYPTOGRAPHIC CHALLENE 1 //
+//////////////////////////////////////////////////
+
+Solution:
+1. We are provided an encoded string: 
+Ymj wjxzqy pjd ktw ymnx qjxxts nx ymj ktqqtbnsl xywnsl; rdqtajqdmtwxjwzssnslymwtzlmymjknjqibmjwjfwjdtzltnslbnymdtzwgnlf
+2. Looking at the first word (or set of three letters) we can guess that it might be a common three letter word such as 'The'
+3. The first character is a 'Y' and in order to translate that to a 'T' we need to cycle through 21 letters, or ROT21
+4. Using a ROT function online we can rotate the string 21 characters which gives the solution
+
+
+////////////////////////////////////////////////////
+//  LEVEL 12: INSECURE DIRECT OBJ REF CHALLENGE 1 //
+////////////////////////////////////////////////////
+
+Solution:
+1. Use BurpSuite to intercept the requests when a selecting a users profile in Security Shepherd
+2. Notice in the request there is a paramter ID set to a numeric value
+3. Send the request to the Repeater and try changing that value in BurpSuite to see what the response is
+4. It appears that the valid values are odd numbers 1,3,5,7,9
+5. Try setting the ID to 11 and send the modified request.  The hidden user is revealed
+6. Retrieve the answer key
+
+
+//////////////////////////////////////////////////
+//  LEVEL 13: POOR VALIDATION 1                 //
+//////////////////////////////////////////////////
+
+Solution:
+1. Try entering a negative number in one of the fields in Security Shepherd.  Notice the server accepts negative qty
+2. So, we need to buy 1 troll with total cost of $0.  Calculate what purchases are needed to equate to -$3000
+3. Enter quantity -100 in the $30 item, and quantity 1 for the $3000 troll item
+4. Retrieve the answer key
+
+
+//////////////////////////////////////////////////
+//  LEVEL 14: SQL INJECTION CHALLENGE 1         //
+//////////////////////////////////////////////////
+
+Solution:
+1. Try using the single quote method: ' or '1=1 and notice that fails
+2. Enter a similar query with double quotes: " or "1=1
+3. This will return results from the modified query to the server
+4. Retrieve the answer key
+
+
+//////////////////////////////////////////////////
+//  LEVEL 15: MOBILE REVERSE ENGINEERING        //
+//////////////////////////////////////////////////
+*Note: You will need the Security Shepherd Android VM
+
+Solution:
+1. Boot the Android VM and locate the apk file for this level
+2. An easy method to analyze the apl is to transfer it off the Android VM to a Kali VM via USB drive
+3. Once the apk file is transferred to a Kali VM, download and install dex2jar and JD-GUI
+4. Convert the apk file to a jar file: d2j-dex2jar com.mobshep.reverseengineer-1.
+5. Open the jar file in JD-GUI
+6. Look at the Reverse_Engineering Class
+7. Notice the answer key in cleartext
+
+
